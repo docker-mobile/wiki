@@ -1,4 +1,4 @@
-port: 3000
+port: $(SERVER_PORT)
 bindIP: 0.0.0.0
 db:
   type: $(DB_TYPE)
@@ -11,7 +11,7 @@ db:
   ssl: $(DB_SSL)
 ssl:
   enabled: $(SSL_ACTIVE)
-  port: 3443
+  port: $(SERVER_PORT)
   provider: letsencrypt
   domain: $(LETSENCRYPT_DOMAIN)
   subscriberEmail: $(LETSENCRYPT_EMAIL)
