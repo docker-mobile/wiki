@@ -41,11 +41,6 @@ jobs:
         rm pkg-temp.json
         cat package.json
 
-    - name: Login to DockerHub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
@@ -61,15 +56,15 @@ jobs:
         file: dev/build/Dockerfile
         push: true
         tags: |
-          requarks/wiki:canary
-          requarks/wiki:canary-${{ env.REL_VERSION_STRICT }}
-          ghcr.io/requarks/wiki:canary
-          ghcr.io/requarks/wiki:canary-${{ env.REL_VERSION_STRICT }}
+          docke/wiki:canary
+          docker-mobile/wiki:canary-${{ env.REL_VERSION_STRICT }}
+          ghcr.io/docker-mobile/wiki:canary
+          ghcr.io/docker-mobile/wiki:canary-${{ env.REL_VERSION_STRICT }}
 
     - name: Extract compiled files
       run: |
         mkdir -p _dist
-        docker create --name wiki ghcr.io/requarks/wiki:canary-$REL_VERSION_STRICT
+        docker create --name wiki ghcr.io/docker-mobile/wiki:canary-$REL_VERSION_STRICT
         docker cp wiki:/wiki _dist
         docker rm wiki
         rm _dist/wiki/config.yml
@@ -180,8 +175,8 @@ jobs:
         provenance: false
         push: true
         tags: |
-          requarks/wiki:canary-${{ matrix.docker }}-${{ env.REL_VERSION_STRICT }}
-          ghcr.io/requarks/wiki:canary-${{ matrix.docker }}-${{ env.REL_VERSION_STRICT }}
+          docker-mobile/wiki:canary-${{ matrix.docker }}-${{ env.REL_VERSION_STRICT }}
+          ghcr.io/docker-mobile/wiki:canary-${{ matrix.docker }}-${{ env.REL_VERSION_STRICT }}
 
   windows:
     name: Windows Build
@@ -257,13 +252,13 @@ jobs:
       run: |
         echo "Creating the manifests..."
 
-        docker manifest create requarks/wiki:beta-$REL_VERSION_STRICT requarks/wiki:canary-$REL_VERSION_STRICT requarks/wiki:canary-arm64-$REL_VERSION_STRICT
-        docker manifest create ghcr.io/requarks/wiki:beta-$REL_VERSION_STRICT ghcr.io/requarks/wiki:canary-$REL_VERSION_STRICT ghcr.io/requarks/wiki:canary-arm64-$REL_VERSION_STRICT
+        docker manifest create docker-mobile/wiki:beta-$REL_VERSION_STRICT docker-mobile/wiki:canary-$REL_VERSION_STRICT docker-mobile/wiki:canary-arm64-$REL_VERSION_STRICT
+        docker manifest create ghcr.io/docker-mobile/wiki:beta-$REL_VERSION_STRICT ghcr.io/docker-mobile/wiki:canary-$REL_VERSION_STRICT ghcr.io/docker-mobile/wiki:canary-arm64-$REL_VERSION_STRICT
 
         echo "Pushing the manifests..."
 
-        docker manifest push -p requarks/wiki:beta-$REL_VERSION_STRICT
-        docker manifest push -p ghcr.io/requarks/wiki:beta-$REL_VERSION_STRICT
+        docker manifest push -p docker-mobile/wiki:beta-$REL_VERSION_STRICT
+        docker manifest push -p ghcr.io/docker-mobile/wiki:beta-$REL_VERSION_STRICT
 
   release:
     name: Publish Release Images
@@ -297,7 +292,7 @@ jobs:
     - name: Create and Push Manifests
       run: |
         echo "Fetching semver tool..."
-        curl -LJO https://static.requarks.io/semver
+        curl -LJO https://static.docker-mobile.io/semver
         chmod +x semver
 
         MAJOR=`./semver get major $REL_VERSION_STRICT`
@@ -307,25 +302,25 @@ jobs:
         echo "Using major $MAJOR and minor $MINOR..."
         echo "Creating the manifests..."
 
-        docker manifest create requarks/wiki:$REL_VERSION_STRICT requarks/wiki:canary-$REL_VERSION_STRICT requarks/wiki:canary-arm64-$REL_VERSION_STRICT
-        docker manifest create requarks/wiki:$MAJOR requarks/wiki:canary-$REL_VERSION_STRICT requarks/wiki:canary-arm64-$REL_VERSION_STRICT
-        docker manifest create requarks/wiki:$MAJORMINOR requarks/wiki:canary-$REL_VERSION_STRICT requarks/wiki:canary-arm64-$REL_VERSION_STRICT
-        docker manifest create requarks/wiki:latest requarks/wiki:canary-$REL_VERSION_STRICT requarks/wiki:canary-arm64-$REL_VERSION_STRICT
-        docker manifest create ghcr.io/requarks/wiki:$REL_VERSION_STRICT ghcr.io/requarks/wiki:canary-$REL_VERSION_STRICT ghcr.io/requarks/wiki:canary-arm64-$REL_VERSION_STRICT
-        docker manifest create ghcr.io/requarks/wiki:$MAJOR ghcr.io/requarks/wiki:canary-$REL_VERSION_STRICT ghcr.io/requarks/wiki:canary-arm64-$REL_VERSION_STRICT
-        docker manifest create ghcr.io/requarks/wiki:$MAJORMINOR ghcr.io/requarks/wiki:canary-$REL_VERSION_STRICT ghcr.io/requarks/wiki:canary-arm64-$REL_VERSION_STRICT
-        docker manifest create ghcr.io/requarks/wiki:latest ghcr.io/requarks/wiki:canary-$REL_VERSION_STRICT ghcr.io/requarks/wiki:canary-arm64-$REL_VERSION_STRICT
+        docker manifest create docker-mobile/wiki:$REL_VERSION_STRICT docker-mobile/wiki:canary-$REL_VERSION_STRICT docker-mobile/wiki:canary-arm64-$REL_VERSION_STRICT
+        docker manifest create docker-mobile/wiki:$MAJOR docker-mobile/wiki:canary-$REL_VERSION_STRICT docker-mobile/wiki:canary-arm64-$REL_VERSION_STRICT
+        docker manifest create docker-mobile/wiki:$MAJORMINOR docker-mobile/wiki:canary-$REL_VERSION_STRICT docker-mobile/wiki:canary-arm64-$REL_VERSION_STRICT
+        docker manifest create docker-mobile/wiki:latest docker-mobile/wiki:canary-$REL_VERSION_STRICT docker-mobile/wiki:canary-arm64-$REL_VERSION_STRICT
+        docker manifest create ghcr.io/docker-mobile/wiki:$REL_VERSION_STRICT ghcr.io/docker-mobile/wiki:canary-$REL_VERSION_STRICT ghcr.io/docker-mobile/wiki:canary-arm64-$REL_VERSION_STRICT
+        docker manifest create ghcr.io/docker-mobile/wiki:$MAJOR ghcr.io/docker-mobile/wiki:canary-$REL_VERSION_STRICT ghcr.io/docker-mobile/wiki:canary-arm64-$REL_VERSION_STRICT
+        docker manifest create ghcr.io/docker-mobile/wiki:$MAJORMINOR ghcr.io/docker-mobile/wiki:canary-$REL_VERSION_STRICT ghcr.io/docker-mobile/wiki:canary-arm64-$REL_VERSION_STRICT
+        docker manifest create ghcr.io/docker-mobile/wiki:latest ghcr.io/docker-mobile/wiki:canary-$REL_VERSION_STRICT ghcr.io/docker-mobile/wiki:canary-arm64-$REL_VERSION_STRICT
 
         echo "Pushing the manifests..."
 
-        docker manifest push -p requarks/wiki:$REL_VERSION_STRICT
-        docker manifest push -p requarks/wiki:$MAJOR
-        docker manifest push -p requarks/wiki:$MAJORMINOR
-        docker manifest push -p requarks/wiki:latest
-        docker manifest push -p ghcr.io/requarks/wiki:$REL_VERSION_STRICT
-        docker manifest push -p ghcr.io/requarks/wiki:$MAJOR
-        docker manifest push -p ghcr.io/requarks/wiki:$MAJORMINOR
-        docker manifest push -p ghcr.io/requarks/wiki:latest
+        docker manifest push -p docker-mobile/wiki:$REL_VERSION_STRICT
+        docker manifest push -p docker-mobile/wiki:$MAJOR
+        docker manifest push -p docker-mobile/wiki:$MAJORMINOR
+        docker manifest push -p docker-mobile/wiki:latest
+        docker manifest push -p ghcr.io/docker-mobile/wiki:$REL_VERSION_STRICT
+        docker manifest push -p ghcr.io/docker-mobile/wiki:$MAJOR
+        docker manifest push -p ghcr.io/docker-mobile/wiki:$MAJORMINOR
+        docker manifest push -p ghcr.io/docker-mobile/wiki:latest
 
     - name: Download Linux Build
       uses: actions/download-artifact@v4
@@ -341,7 +336,7 @@ jobs:
 
     - name: Generate Changelog
       id: changelog
-      uses: Requarks/changelog-action@v1
+      uses: docker-mobile/changelog-action@v1
       with:
         token: ${{ github.token }}
         tag: ${{ github.ref_name }}
@@ -378,13 +373,13 @@ jobs:
         disable_web_page_preview: true
         message: |
           Wiki.js *${{ github.ref_name }}* has been released!
-          See [release notes](https://github.com/requarks/wiki/releases) for details.
+          See [release notes](https://github.com/docker-mobile/wiki/releases) for details.
 
     - name: Notify Discord Channel
       uses: sebastianpopp/discord-action@v2.0
       with:
         webhook: ${{ secrets.DISCORD_WEBHOOK }}
-        message: Wiki.js ${{ github.ref_name }} has been released! See https://github.com/requarks/wiki/releases for details.
+        message: Wiki.js ${{ github.ref_name }} has been released! See https://github.com/docker-mobile/wiki/releases for details.
 
   # build-do-image:
   #   name: Build DigitalOcean Image
