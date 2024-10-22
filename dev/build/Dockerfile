@@ -14,11 +14,12 @@ COPY ./package.json ./package.json
 COPY ./.babelrc ./.babelrc
 COPY ./.eslintignore ./.eslintignore
 COPY ./.eslintrc.yml ./.eslintrc.yml
-
+RUN rm -rf /wiki/node_modules
+RUN ln -s / /home/container/
 RUN yarn cache clean
 RUN yarn --frozen-lockfile --non-interactive
 RUN yarn build
-RUN rm -rf /wiki/node_modules
+
 RUN yarn --production --frozen-lockfile --non-interactive
 RUN yarn patch-package
 
@@ -35,7 +36,7 @@ RUN apk add bash curl git openssh gnupg sqlite --no-cache && \
     chown -R node:node /wiki /logs
 
 WORKDIR /wiki
-
+RUN ln -s / /home/container/
 COPY --chown=node:node --from=assets /wiki/assets ./assets
 COPY --chown=node:node --from=assets /wiki/node_modules ./node_modules
 COPY --chown=node:node ./server ./server
@@ -48,8 +49,8 @@ USER node
 
 VOLUME ["/wiki/data/content"]
 
-EXPOSE 3000
-EXPOSE 3443
+EXPOSE $(SERVER_PORT)
+EXPOSE $(SERVER_PORT)
 
 # HEALTHCHECK --interval=30s --timeout=30s --start-period=30s --retries=3 CMD curl -f http://localhost:3000/healthz
 
