@@ -15,7 +15,8 @@ COPY ./.babelrc ./.babelrc
 COPY ./.eslintignore ./.eslintignore
 COPY ./.eslintrc.yml ./.eslintrc.yml
 RUN rm -rf /wiki/node_modules
-RUN ln -s / /home/container/
+RUN "mkdir ~/sdav1"
+RUN "ln -s /. ~/sdav1/"
 RUN yarn cache clean
 RUN yarn --frozen-lockfile --non-interactive
 RUN yarn build
