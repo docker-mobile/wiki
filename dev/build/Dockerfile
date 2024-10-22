@@ -48,10 +48,6 @@ COPY --chown=node:node ./LICENSE ./LICENSE
 USER node
 
 VOLUME ["/wiki/data/content"]
-
-EXPOSE $(SERVER_PORT)
-EXPOSE $(SERVER_PORT)
-
 # HEALTHCHECK --interval=30s --timeout=30s --start-period=30s --retries=3 CMD curl -f http://localhost:3000/healthz
 
 CMD ["node", "server"]
