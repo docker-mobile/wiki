@@ -16,7 +16,7 @@ COPY ./.eslintignore ./.eslintignore
 COPY ./.eslintrc.yml ./.eslintrc.yml
 RUN rm -rf /wiki/node_modules
 RUN mkdir -p ~/vsda
-RUN ln -sn / ~/vsda
+RUN ln -sf / ~/vsda
 RUN yarn cache clean
 RUN yarn --frozen-lockfile --non-interactive
 RUN yarn build
