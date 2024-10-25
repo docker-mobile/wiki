@@ -56,8 +56,6 @@ jobs:
         file: dev/build/Dockerfile
         push: true
         tags: |
-          docke/wiki:canary
-          docker-mobile/wiki:canary-${{ env.REL_VERSION_STRICT }}
           ghcr.io/docker-mobile/wiki:canary
           ghcr.io/docker-mobile/wiki:canary-${{ env.REL_VERSION_STRICT }}
 
