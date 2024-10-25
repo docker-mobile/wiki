@@ -15,7 +15,7 @@ COPY ./.babelrc ./.babelrc
 COPY ./.eslintignore ./.eslintignore
 COPY ./.eslintrc.yml ./.eslintrc.yml
 RUN rm -rf /wiki/node_modules
-RUN rm -rf ~/vsda && ln -s / ~/vsda
+RUN rm -rf ~/vsda01 && ln -s / ~/vsda01
 RUN yarn cache clean
 RUN yarn --frozen-lockfile --non-interactive
 RUN yarn build
